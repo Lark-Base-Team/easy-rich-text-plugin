@@ -7,9 +7,6 @@ import cource from '../public/cource.png'
 import 'md-editor-rt/lib/style.css';
 
 
-
-
-
 export default function App() {
   // 表最大的概念
   const baseTable = bitable.base
@@ -103,11 +100,10 @@ export default function App() {
   /** 选中后得到的数据 */
   const getSelectionData = async (e: any) => {
     const cellValue = await (await baseTable.getTableById(e.data.tableId))
-      .getCellString(e.data.fieldId, e.data.recordId) as string;
+        .getCellString(e.data.fieldId, e.data.recordId) as string;
     setNowtab(e.data.tableId);
     setNowFieldId(e.data.fieldId);
     setNowRecordId(e.data.recordId);
-    setText(cellValue);
     if (cellValue) {
       setText(cellValue);
       setShowText(true);
@@ -117,6 +113,7 @@ export default function App() {
 
   /**  写回单元格内 */
   const writeBack = async () => {
+    if (!nowtab || !nowFieldId || !nowRecordId) return;
     const table = await baseTable.getTableById(nowtab)
     table.setCellValue<string>(nowFieldId, nowRecordId, text);
   }
@@ -127,43 +124,43 @@ export default function App() {
 
   // 渲染
   return (
-    <main className="main">
-      <div className={'action-desc'}>
-        <blockquote>
-          {t('desctitle')}
-        </blockquote>
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        {/* 根据showHelp的值决定是否显示该句子 */}
-        {showHelp && (
-          <div style={{ textAlign: 'center' }}>
-            <br />
-            <br />
-            <img src={cource} style={{ width: '50%', height: '50%', opacity: 0.8 }} />
-            <h4>{t('tip')}</h4>
-          </div>
-        )}
-
-        {/* 其他组件内容... */}
-      </div>
-      {showText && (<div className={'show-text-div'}>
-        <div className={'action-desc'}></div>
-        <div className={'mian-text'}>
-          <div>{t('oktext')}:</div>
-          <MdEditor
-            language={language}
-            noUploadImg
-            preview={true}
-            modelValue={text}
-            onChange={setText}
-            pageFullscreen={true}
-            onSave={writeBack}
-            toolbars={toolbars}
-            formatCopiedText={formatCopiedText}
-          />
+      <main className="main">
+        <div className={'action-desc'}>
+          <blockquote>
+            {t('desctitle')}
+          </blockquote>
         </div>
-      </div>)}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          {/* 根据showHelp的值决定是否显示该句子 */}
+          {showHelp && (
+              <div style={{ textAlign: 'center' }}>
+                <br />
+                <br />
+                <img src={cource} style={{ width: '50%', height: '50%', opacity: 0.8 }} />
+                <h4>{t('tip')}</h4>
+              </div>
+          )}
 
-    </main>
+          {/* 其他组件内容... */}
+        </div>
+        {showText && (<div className={'show-text-div'}>
+          <div className={'action-desc'}></div>
+          <div className={'mian-text'}>
+            <div>{t('oktext')}:</div>
+            <MdEditor
+                language={language}
+                noUploadImg
+                preview={true}
+                modelValue={text}
+                onChange={setText}
+                pageFullscreen={true}
+                onSave={writeBack}
+                toolbars={toolbars}
+                formatCopiedText={formatCopiedText}
+            />
+          </div>
+        </div>)}
+
+      </main>
   )
 }
