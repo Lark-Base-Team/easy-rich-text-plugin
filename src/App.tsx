@@ -6,8 +6,10 @@ import {MdEditor, ToolbarNames, config} from 'md-editor-rt';
 import course from './public/course.png'
 import 'md-editor-rt/lib/style.css';
 import ReadExtension from './components/ReadExtension';
+import {FilterXSS} from 'xss';
 
 export default function App() {
+    const xssFilter = new FilterXSS();
     // 表最大的概念
     const baseTable = bitable.base
     const {t} = useTranslation();
@@ -95,7 +97,7 @@ export default function App() {
 
     //代码块复制
     const formatCopiedText = (text: string) => {
-        return `${text}  - from md-editor-rt`;
+        return `${text}`;
     };
 
     /** 选中后得到的数据 */
@@ -120,7 +122,8 @@ export default function App() {
     }
     //监听内容变化
     useEffect(() => {
-        writeBack().then(() =>{} );
+        writeBack().then(() => {
+        });
     }, [text])
 
     // 渲染
@@ -137,7 +140,7 @@ export default function App() {
                     <div style={{textAlign: 'center'}}>
                         <br/>
                         <br/>
-                        <img src={course} style={{width: '50%', height: '50%', opacity: 0.8}}  alt={"欢迎使用"}/>
+                        <img src={course} style={{width: '50%', height: '50%', opacity: 0.8}} alt={"欢迎使用"}/>
                         <h4>{t('tip')}</h4>
                     </div>
                 )}
@@ -152,14 +155,14 @@ export default function App() {
                         language={language}
                         noUploadImg
                         preview={true}
-                        modelValue={text}
+                        modelValue={xssFilter.process(text)}
                         onChange={setText}
                         pageFullscreen={true}
                         onSave={writeBack}
                         toolbars={toolbars}
                         formatCopiedText={formatCopiedText}
                         defToolbars={[
-                            <ReadExtension mdText={text} key="read-extension"/>,
+                            <ReadExtension mdText={xssFilter.process(text)} key="read-extension"/>,
                         ]}
                     />
                 </div>
