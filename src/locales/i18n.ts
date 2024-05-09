@@ -26,7 +26,6 @@ i18n
   });
 
 bitable.bridge.getLanguage().then((lng) => {
-  console.log('Detected Language:', lng);
   if (i18n.language !== lng) {
     i18n.changeLanguage(lng);
   }
